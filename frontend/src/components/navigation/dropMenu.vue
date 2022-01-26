@@ -1,9 +1,11 @@
 <template>
   <v-hover v-slot="{ hover }">
     <div class="container-drop-menu">
-      <div class="drop-menu-label text-button">
-        {{ label }} <v-icon color="black">mdi-chevron-down</v-icon>
-      </div>
+      <router-link :to="link" class="router-link">
+        <div class="drop-menu-label text-button">
+          {{ label }} <v-icon color="black">mdi-chevron-down</v-icon>
+        </div>
+      </router-link>
       <div class="list-drop-menu" v-if="hover">
         <v-list dark>
           <v-list-item-group v-model="selectedItem" color="primary">
@@ -31,6 +33,7 @@ export default {
   props: {
     items: Array,
     label: String,
+    link: String,
   },
 };
 </script>
@@ -67,8 +70,6 @@ export default {
   color: white;
 }
 .router-link {
-  margin-left: 10px;
-  margin-right: 10px;
   text-decoration: none;
   color: black !important;
 }

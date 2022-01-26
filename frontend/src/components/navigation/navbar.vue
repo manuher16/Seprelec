@@ -22,10 +22,26 @@
     </router-link>
     <v-spacer></v-spacer>
     <router-link to="/" class="router-link text-button"> Inicio </router-link>
-    <DropMenu :label="menus.services.name" :items="menus.services.items" />
-    <DropMenu :label="menus.expirence.name" :items="menus.expirence.items" />
-    <DropMenu :label="menus.products.name" :items="menus.products.items" />
-    <DropMenu :label="menus.notice.name" :items="menus.notice.items" />
+    <DropMenu
+      :label="menus.services.name"
+      :items="menus.services.items"
+      link="/services"
+    />
+    <DropMenu
+      :label="menus.expirence.name"
+      :items="menus.expirence.items"
+      link="/expirence"
+    />
+    <DropMenu
+      :label="menus.products.name"
+      :items="menus.products.items"
+      link="/products"
+    />
+    <DropMenu
+      :label="menus.notice.name"
+      :items="menus.notice.items"
+      link="/notice"
+    />
 
     <router-link to="/about" class="router-link text-button">
       Nosotros
