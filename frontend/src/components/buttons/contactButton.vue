@@ -1,12 +1,12 @@
 <template>
   <v-sheet
-    class="btn-contact-float"
-    width="190"
+    class="btn-contact-float d-flex aling-end justify-end"
+    width="250"
     height="40"
-    color="transparent"
+    :color="iconSuffle.color"
     rounded
   >
-    <v-menu transition="scroll-x-reverse-transition">
+    <v-menu transition="scroll-x-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-sheet :color="iconSuffle.color" rounded>
           <v-btn
@@ -146,6 +146,6 @@ export default {
   justify-content: center;
   align-items: center;
   bottom: 30px;
-  right: 30px;
+  left: -10px;
 }
 </style>
