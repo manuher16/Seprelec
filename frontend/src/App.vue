@@ -1,30 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Seprelec Logo"
-          class="shrink mr-2"
-          contain
-          src="logo_icon.png"
-          transition="scale-transition"
-          width="40"
-        />
-        <v-img
-          alt="Seprelec Logo"
-          class="shrink mr-2"
-          contain
-          src="logo_seprelec.png"
-          transition="scale-transition"
-          width="200"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-      <div>Inicio</div>
-      <v-btn href="/about" text color="black"> Sobre </v-btn>
-    </v-app-bar>
-
+    <Navbar />
     <v-main>
       <router-view />
     </v-main>
@@ -39,6 +15,7 @@ import axios from "axios";
 import BtnContact from "./components/buttons/contactButton.vue";
 import ModalConsultProject from "./components/modals/consultProyect.vue";
 import Footer from "./components/navigation/footer.vue";
+import Navbar from "./components/navigation/navbar.vue";
 export default {
   name: "App",
 
@@ -49,6 +26,7 @@ export default {
     BtnContact,
     ModalConsultProject,
     Footer,
+    Navbar,
   },
   created() {
     if (this.$cookies.get("iplocation") == "false") {
