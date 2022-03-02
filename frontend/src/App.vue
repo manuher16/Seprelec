@@ -2,10 +2,15 @@
   <v-app>
     <Navbar />
     <v-main>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </v-main>
     <BtnContact />
     <ModalConsultProject />
+    <Snackbar />
     <Footer />
   </v-app>
 </template>
@@ -16,6 +21,7 @@ import BtnContact from "./components/buttons/contactButton.vue";
 import ModalConsultProject from "./components/modals/consultProyect.vue";
 import Footer from "./components/navigation/footer.vue";
 import Navbar from "./components/navigation/navbar.vue";
+import Snackbar from "./components/notification/snackbar.vue";
 export default {
   name: "App",
 
@@ -27,6 +33,7 @@ export default {
     ModalConsultProject,
     Footer,
     Navbar,
+    Snackbar,
   },
   created() {
     if (this.$cookies.get("iplocation") == "false") {
@@ -42,3 +49,14 @@ export default {
   },
 };
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

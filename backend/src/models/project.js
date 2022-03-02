@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
-    name: {
+    description: {
         type: String,
         required: true,
     },
-    description: {
-        type: String,
+    payDay: {
+        type: Date,
         required: true,
     },
     budget: {
@@ -19,37 +19,40 @@ const projectSchema = new mongoose.Schema({
     },
     endDate: {
         type: Date,
-        required: true,
+        default: null,
     },
     status: {
         type: String,
-        required: true,
+        default: 'En espera',
     },
-    client: {
+    idCompany: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "user"
+        ref: "company",
+        default: null
     },
-    employees: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "employed"
-    },
-    services: {
-        type: Array,
-        required: true,
-        default: [],
-    },
+
     idQuote: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        default: null,
         ref: "quote"
     },
     idInvoice: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        default: null,
         ref: "invoice"
     },
+    workforce: [{
+        employee: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "employee"
+        },
+        price: {
+            type: Number,
+            required: true,
+        },
+    }],
 }, {
     timestamps: true,
 

@@ -1,15 +1,22 @@
-
+import axios from 'axios';
 export default {
-    loggedIn: () => {
+    loggedIn: async (to) => {
         try {
+
             const token = localStorage.getItem('token');
-            console.log(token);
-            if (token) {
-                return true;
-            }
-            return false;
+            const res = await axios.get(`${process.env.VUE_APP_API_URL}/api/utils/validate-jwt`, {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                    'to': `${to.fullPath}`,
+                }
+            })
+
+            return res.data.isAuthenticated;
         }
         catch (e) {
+            console.log(e);
+            //location.href = '/';
             return false;
         }
 

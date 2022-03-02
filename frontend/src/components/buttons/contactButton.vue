@@ -23,7 +23,7 @@
         </v-sheet>
       </template>
       <v-list>
-        <v-list-item-group v-model="model">
+        <v-list-item-group>
           <div v-for="(item, index) in icons" :key="index">
             <v-list-item
               v-if="item.action.type == 'modal'"

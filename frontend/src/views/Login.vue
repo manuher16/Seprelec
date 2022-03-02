@@ -50,6 +50,7 @@
 
 <script>
 import axios from "axios";
+import { mapMutations } from "vuex";
 export default {
   data: () => ({
     passwordHidden: true,
@@ -68,15 +69,27 @@ export default {
       ],
     },
   }),
-  created() {
-    console.log(this);
-  },
+  created() {},
   methods: {
+    ...mapMutations("session", ["setLogin", "setToken"]),
     submit: function () {
       if (this.$refs.formLogin.validate()) {
-        axios.post(`${process.env.VUE_APP_API_URL}/login`, this.formData);
+        axios
+          .post(
+            `${process.env.VUE_APP_API_URL}/api/user/login-admin`,
+            this.formData
+          )
+          .then((res) => {
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("session", true);
+            this.setLogin(true);
+            this.setToken(res.data.token);
+            console.log(this.$router.push({ path: "/admin" }));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-      console.log(this.formData);
     },
   },
 };

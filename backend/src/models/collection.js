@@ -1,17 +1,18 @@
 import mongoose from 'mongoose';
-const quoteSchema = new mongoose.Schema({
+
+const collectionSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        unique: true,
     },
     description: {
         type: String,
-        required: true,
+        default: ''
     },
-    collection: {
-    },
+
 }, {
     timestamps: true,
+})
 
-});
-export default mongoose.model('Quote', quoteSchema);
+export default mongoose.model('collection', collectionSchema);

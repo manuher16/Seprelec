@@ -20,9 +20,9 @@ const login = (req, res) => {
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    role: user.role,
+                    idRole: user.idRole,
                 };
-                jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 3600 }, (err, token) => {
+                jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 86400 }, (err, token) => {
                     if (err) {
                         res.status(500).json({
                             message: "Error signing token"

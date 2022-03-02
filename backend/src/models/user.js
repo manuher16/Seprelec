@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import Role from "./role";
+let roleDefault = null
+
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -14,10 +17,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    role: {
-        type: String,
-        required: true,
-        default: 'user',
+    idRole: {
+        type: mongoose.Types.ObjectId,
+        ref: "Role"
     },
     permissions: {
         type: Array,
@@ -29,14 +31,18 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    idEmployee: {
-        type: mongoose.Types.ObjectId,
-        ref: "employed",
-        default: null,
+    address: {
+        type: String,
+        default: '',
+
     },
-
-
 }, {
     timestamps: true,
+});
+UserSchema.pre('save', async function (next) {
+    const user = this
+    const roleDefault = await Role.findOne({ name: 'user' });
+    user.idRole = roleDefault._id
+    next();
 });
 export default mongoose.model('User', UserSchema);

@@ -1,41 +1,34 @@
 import mongoose from 'mongoose';
 
-const permissions = new mongoose.Schema({
+const permissionShema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true,
     },
     description: {
         type: String,
-        required: true,
-    },
-    collection: {
-        type: String,
-        required: true,
-
+        default: ''
     },
     write: {
         type: Boolean,
-        required: true,
         default: false,
     },
     read: {
         type: Boolean,
-        required: true,
         default: false,
     },
     delete: {
         type: Boolean,
-        required: true,
         default: false,
     },
     me: {
         type: Boolean,
-        required: true,
+
         default: false,
     },
 }, {
     timestamps: true,
 });
 
-export default mongoose.model('Permission', permissions);
+export default mongoose.model('permission', permissionShema);

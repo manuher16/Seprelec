@@ -5,19 +5,25 @@ const serviceSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    code: {
-        type: String,
-        required: true,
-        unique: true,
-    },
     description: {
         type: String,
-        required: true,
+
     },
     price: {
         type: Number,
         required: true,
     },
+    materials: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Material',
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            required: true,
+        }
+    }]
 }, {
     timestamps: true,
 })

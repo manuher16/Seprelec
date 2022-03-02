@@ -4,6 +4,7 @@ const roleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     description: {
         type: String,
@@ -16,8 +17,8 @@ const roleSchema = new mongoose.Schema({
     },
     code: {
         type: String,
+        default: '',
         required: true,
-
     }
 }, {
     timestamps: true,

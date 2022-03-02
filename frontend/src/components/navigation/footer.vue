@@ -23,7 +23,7 @@
       <v-divider></v-divider>
 
       <v-card-text class="white--text">
-        {{ new Date().getFullYear() }} — <strong>Seprelec</strong>
+        {{ new Date().getFullYear() }} — <strong>Serprelec</strong>
       </v-card-text>
     </v-card>
   </v-footer>

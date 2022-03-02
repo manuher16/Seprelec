@@ -30,6 +30,9 @@
 
 <script>
 export default {
+  data: () => ({
+    selectedItem: null,
+  }),
   props: {
     items: Array,
     label: String,
@@ -62,7 +65,6 @@ export default {
 .list-drop-menu {
   display: flex;
   position: relative;
-  justify-content: start;
   top: 10px;
   width: 100%;
   flex-direction: column;

@@ -4,9 +4,10 @@ const employed = new mongoose.Schema({
     idUser: {
         type: mongoose.Types.ObjectId,
         required: true,
-        ref: "user"
+        ref: "User",
+        unique: true
     },
-    skill: {
+    skills: {
         type: Array,
         required: true,
         default: []
@@ -28,3 +29,5 @@ const employed = new mongoose.Schema({
 }, {
     timestamps: true,
 })
+
+export default mongoose.model('employee', employed);
