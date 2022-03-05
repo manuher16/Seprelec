@@ -27,14 +27,17 @@ export default {
             totalWithDiscount: 0,
             total: 0,
         },
-        materials: [],
-        services: [],
+        employees: [],
+        selectedMaterials: [],
+        selectedServices: [],
         workforce: [],
+        selectedEmployees: [],
     },
     mutations: {
         setProjects(state, projects) {
             state.projects = projects;
         },
+        setSelectedServices(state, selectedServices) { state.selectedServices = selectedServices; },
         setSelecteProject(state, project) {
             state.selectedProject = project;
         },
@@ -59,20 +62,18 @@ export default {
         setProject(state, project) {
             state.project = project;
         },
-        pushMaterials(state, material) {
-            let index = state.materials.findIndex(m => m._id === material._id);
+        pushMaterialsForProject(state, material) {
+            let index = state.selectedMaterials.findIndex(m => m._id === material._id);
             if (index === -1) {
-                state.materials.push(material);
-            } else {
-                state.materials[index].quantity += parseInt(material.quantity);
+                state.selectedMaterials.push(material);
             }
         },
-        pushServices(state, service) {
-            let index = state.services.findIndex(s => s._id === service._id);
+        pushServicesForProject(state, service) {
+            let index = state.selectedServices.findIndex(s => s._id === service._id);
             if (index === -1) {
-                state.services.push(service);
+                state.selectedServices.push(service);
             } else {
-                state.services[index].quantity += parseInt(service.quantity);
+                state.selectedServices[index].quantity = service.quantity;
             }
         },
         pushWorkforce(state, workforce) {
@@ -82,15 +83,59 @@ export default {
             }
         },
         popServices(state, service) {
-            let index = state.services.findIndex(s => s._id === service._id);
+            let index = state.selectedServices.findIndex(s => s._id === service._id);
             if (index !== -1) {
-                state.services.materials.forEach(material => {
-                    let indexMaterial = state.materials.findIndex(m => m._id === material._id);
+                state.selectedServices[index].materials.forEach(material => {
+                    let indexMaterial = state.selectedMaterials.findIndex(m => m._id === material._id);
                     if (indexMaterial !== -1) {
-                        state.materials[indexMaterial].quantity -= parseInt(material.quantity);
+                        if (state.selectedMaterials[indexMaterial].quantity - parseInt(material.quantity) == 0) {
+                            state.selectedMaterials.splice(indexMaterial, 1);
+                        } else {
+                            state.selectedMaterials[indexMaterial].quantity = state.selectedMaterials[indexMaterial].quantity - parseInt(material.quantity);
+                        }
+
                     }
                 });
-                state.services.splice(index, 1);
+                state.selectedServices.splice(index, 1);
+            }
+        },
+        pushSelectedEmployees(state, employee) {
+            if (state.employees.length > 0) {
+                let index = state.employees.findIndex(m => m._id == employee._id);
+                if (index == -1) {
+                    state.employees.push(employee);
+                }
+
+            } else {
+                state.employees.push(employee);
+            }
+
+        },
+        removeSelectedEmployees(state, employee) {
+            let index = state.employees.findIndex(m => m._id == employee._id);
+            if (index != -1) {
+                state.employees.splice(index, 1);
+            }
+        },
+        pushSelectedMaterialsForProject: (state, material) => {
+            if (state.selectedMaterials.length > 0) {
+                let index = state.selectedMaterials.findIndex(m => m._id == material._id);
+                if (index == -1) {
+                    state.selectedMaterials.push(material);
+                }
+                if (index > -1) {
+                    state.selectedMaterials[index].quantity = parseInt(state.selectedMaterials[index].quantity) + parseInt(material.quantity);
+                }
+
+            } else {
+                state.selectedMaterials.push(material);
+            }
+
+        },
+        removeSelectedMaterial: (state, material) => {
+            let index = state.selectedMaterials.findIndex(m => m._id == material._id);
+            if (index != -1) {
+                state.selectedMaterials.splice(index, 1);
             }
         },
 
@@ -118,28 +163,42 @@ export default {
             commit('setProjects', res.data.project);
         },
         calculteTotalServices({ commit, state }) {
-            let total = 0;
-            state.project.services.forEach(service => {
-                total += service.price;
-            });
-            commit('setTotalServices', total);
-            return total;
+            if (state.selectedServices.length > 0) {
+                let total = 0;
+                state.selectedServices.forEach(service => {
+                    total += service.price * service.quantity;
+                });
+                commit('setTotalServices', total);
+                return total;
+            } else {
+                commit('setTotalServices', 0);
+                return 0;
+            }
         },
         calculteTotalWorkforce({ commit, state }) {
             let total = 0;
-            state.project.workforce.forEach(employee => {
-                total += employee.price;
+            state.selectedEmployees.forEach(employee => {
+                if (employee.price == "" || !employee.price || employee.price == null || employee.price < 0) {
+                    employee.price = 0;
+                    total += 0;
+                } else {
+
+                    total += parseFloat(employee.price)
+                }
             });
-            commit('setTotalWorkforce', total);
-            return total;
+            commit('setTotalWorkforce', total)
         },
         calculteTotalMaterials({ commit, state }) {
+
             let total = 0;
-            state.project.materials.forEach(material => {
-                total += material.price;
+            state.selectedMaterials.forEach(material => {
+                total += material.price * material.quantity * (material.serviceQuantity || 1);
             });
             commit('setTotalMaterials', total);
             return total;
+
+
+
         },
         calculteTotal({ commit, state }) {
             let total = 0;

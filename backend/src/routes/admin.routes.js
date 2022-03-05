@@ -37,6 +37,7 @@ import validateJWT from '../middlewares/validateJWT';
 import authRole from "../middlewares/authRole";
 import route from '../models/route';
 import getCollections from '../controller/collection/getCollections';
+
 //Routes Collections 
 router.get('/collections', validateJWT, authRole(['superadmin']), getCollections)
 

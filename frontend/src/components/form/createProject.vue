@@ -102,22 +102,8 @@
                 </v-menu></v-col
               >
             </v-row>
-            <v-card flat>
-              <v-btn @click="modal.addService = true" color="primary"
-                >Agregar Servicio</v-btn
-              >
-              <v-dialog v-model="modal.addService">
-                <v-card flat>
-                  <TableServices type="add" />
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn color="error" @click="modal.addService = false">
-                      Cerrar
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-card>
+
+            <AddService />
             <v-card flat>
               <TableServices type="selection" />
             </v-card>
@@ -248,6 +234,7 @@ import SearchCompany from "../modals/searchCompany.vue";
 import TableServices from "../table/tableServices.vue";
 import TableMaterial from "../table/tableAddmaterials.vue";
 import AddEmployee from "../modals/addEmpleadoToProject.vue";
+import AddService from "../modals/addServicesToProject.vue";
 import TableWorkforce from "../table/tableWorkforce.vue";
 import { mapState } from "vuex";
 export default {
@@ -284,6 +271,7 @@ export default {
     TableMaterial,
     AddEmployee,
     TableWorkforce,
+    AddService,
   },
 };
 </script>

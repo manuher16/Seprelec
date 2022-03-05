@@ -40,12 +40,12 @@
             v-if="type == 'selection'"
             color="error"
             icon
-            @click="removeItem(item)"
+            @click="popServicesToProject(item)"
             ><v-icon large>mdi-close</v-icon></v-btn
           >
         </template>
         <template v-slot:item.materials="{ item }">
-          {{ item.materials.length }}
+          {{ totalQuantityMaterials(item) }}
         </template>
 
         <template v-slot:item.price="{ item }">
@@ -69,7 +69,28 @@
             Intl.NumberFormat("es-HN", {
               style: "currency",
               currency: "HNL",
-            }).format(calcuteTotalMaterial(item) + item.price)
+            }).format(
+              calcuteTotalMaterial(item) * (item.quantity ? item.quantity : 1) +
+                item.price * (item.quantity ? item.quantity : 1)
+            )
+          }}
+        </template>
+        <template v-slot:item.totalMaterials="{ item }">
+          {{
+            Intl.NumberFormat("es-HN", {
+              style: "currency",
+              currency: "HNL",
+            }).format(
+              calcuteTotalMaterial(item) * (item.quantity ? item.quantity : 1)
+            )
+          }}
+        </template>
+        <template v-slot:item.totalService="{ item }">
+          {{
+            Intl.NumberFormat("es-HN", {
+              style: "currency",
+              currency: "HNL",
+            }).format((item.quantity ? item.quantity : 1) * item.price)
           }}
         </template>
       </v-data-table>
@@ -109,9 +130,9 @@ export default {
       delete: false,
     },
     headers: [
-      { text: "Nombre", value: "name" },
+      { text: "Servicio", value: "name" },
       { text: "Descripcion", value: "description" },
-      { text: "Precio servicio", value: "price" },
+      { text: "Precio", value: "price" },
       { text: "Precio materiales", value: "priceMaterial" },
       { text: "Materiales", value: "materials" },
       { text: "Total", value: "total" },
@@ -119,16 +140,26 @@ export default {
     ],
   }),
   computed: {
-    ...mapState("service", ["services", "selectedServices"]),
+    ...mapState("service", ["services"]),
+    ...mapState("project", ["selectedServices"]),
   },
   methods: {
-    ...mapActions("service", ["getServices", "calculateTotal"]),
     ...mapMutations("material", ["pushSelectedMaterials"]),
-    ...mapMutations("service", [
-      "pushSelectedServices",
+    ...mapMutations("project", [
+      "pushServicesForProject",
       "removeSelectedService",
+      "pushSelectedMaterialsForProject",
+      "popServices",
     ]),
 
+    ...mapActions("service", ["getServices", "calculateTotal"]),
+    ...mapActions("project", [
+      "calculteTotalWorkforce",
+      "calculteTotalMaterials",
+      "calculteTotal",
+      "calculteTotalDiscount",
+      "calculteTotalServices",
+    ]),
     ...mapActions("notificartion", ["showSnackbar"]),
     ...mapActions("employee", ["calculteTotalWorkforce"]),
 
@@ -139,6 +170,14 @@ export default {
         this.calculateTotal();
         this.calculteTotalWorkforce();
       }
+    },
+    popServicesToProject(item) {
+      this.popServices(item);
+      this.calculteTotalServices();
+      this.calculteTotalMaterials();
+      this.calculteTotalWorkforce();
+      this.calculteTotalDiscount();
+      this.calculteTotal();
     },
     deleteService() {
       this.loading = true;
@@ -169,31 +208,47 @@ export default {
           this.dialog.delete = false;
         });
     },
-    removeItem(item) {
-      this.removeSelectedService(item);
-      this.calculateTotal();
-      this.calculteTotalWorkforce();
-    },
-    add(item) {
-      this.pushSelectedServices(item);
-      item.materials.forEach((material) => {
-        this.pushSelectedMaterials(material);
-      });
 
-      this.calculateTotal();
-      this.calculteTotalWorkforce();
-    },
     calcuteTotalMaterial(item) {
       let total = 0;
-      this.calculateTotal();
-      this.calculteTotalWorkforce();
       item.materials.forEach((element) => {
         total += element.quantity * element.price;
       });
+
+      return total;
+    },
+    getTotalMaterialsPrice(service) {
+      let total = 0;
+      service.materials.forEach((material) => {
+        total += parseFloat(material.price) * parseFloat(material.quantity);
+      });
+      return total;
+    },
+    totalQuantityMaterials(item) {
+      let total = 0;
+      item.materials.forEach((material) => {
+        total += parseFloat(material.quantity);
+      });
+      total = total * (item.quantity || 1);
       return total;
     },
   },
   created() {
+    if (this.type == "selection") {
+      Array.prototype.insert = function (index, item) {
+        this.splice(index, 0, item);
+      };
+      this.headers.splice(3, 1);
+      this.headers.insert(4, {
+        text: "Cantidad servicios",
+        value: "quantity",
+      });
+      this.headers.insert(5, {
+        text: "Total Materiales",
+        value: "totalMaterials",
+      });
+      this.headers.insert(6, { text: "Total Servicio", value: "totalService" });
+    }
     if (this.type != "selection") {
       this.getServices();
     }

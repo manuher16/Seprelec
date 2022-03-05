@@ -40,6 +40,16 @@
     <template v-slot:item.quantity="{ item }">
       <v-form ref="formMaterial">
         <v-text-field
+          v-if="type == 'selection'"
+          :rules="rules.quantity"
+          v-model="item.quantity"
+          type="number"
+          required
+          single-line
+        >
+        </v-text-field>
+        <v-text-field
+          v-else
           :rules="rules.quantity"
           v-model="item.quantity2"
           type="number"
@@ -102,6 +112,7 @@ export default {
   }),
   methods: {
     ...mapActions("material", ["getMaterials"]),
+    ...mapActions("supplier", ["getSuppliers"]),
     ...mapMutations("material", [
       "setSelectedMaterials",
       "pushSelectedMaterials",
@@ -115,9 +126,13 @@ export default {
     type: String,
   },
   computed: {
-    ...mapState("material", ["materials", "selectedMaterials"]),
+    ...mapState("material", ["materials"]),
+    ...mapState("project", ["selectedMaterials"]),
   },
   created() {
+    if (this.type == "selection") {
+      this.getSuppliers();
+    }
     this.getMaterials();
   },
 };
