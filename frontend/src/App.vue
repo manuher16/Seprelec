@@ -41,8 +41,7 @@ export default {
         .get(
           `https://ipinfo.io/json?token=${process.env.VUE_APP_API_KEY_IPINFO}`
         )
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
           this.$cookies.set("iplocation", true, "1d");
         });
     }

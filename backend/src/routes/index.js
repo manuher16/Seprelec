@@ -10,11 +10,13 @@ import utilsRoutes from "./utils.routes";
 import adminRoutes from "./admin.routes"
 
 const app = express();
-app.use(logger({ path: "/path/to/logfile.txt" }));
+
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'))
+
+
 app.use(cors({
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
